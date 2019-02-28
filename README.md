@@ -1,6 +1,6 @@
 # Reeds-Shepp Curves
 
-A simple Python implementation of the Reeds-Shepp curves formulas provided in the following article:
+A simple Python implementation of the Reeds-Shepp curves formulas provided in the following paper:
 
 Reeds, J. A.; Shepp, L. A. Optimal paths for a car that goes both forwards and backwards. Pacific J. Math. 145 (1990), no. 2, 367-393.
 https://projecteuclid.org/euclid.pjm/1102645450
@@ -13,7 +13,7 @@ I have only tested the code under Python 3.7.1. It uses the `enum` module so it 
 
 ### Examples
 
-Draw all the paths going through all the vectors as well as the shortest one (each vector represents a position and an angle, their length does not represent anything).
+Draw all the paths going through all the vectors as well as the shortest one (each vector represents a position and an angle, its length does not represent anything).
 
 ```
 $ python3 demo.py
@@ -47,6 +47,7 @@ for e in full_path:
 ```
 
 Output:
+
 ```
 Shortest path length: 29.53
 
