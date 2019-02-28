@@ -9,7 +9,7 @@ import random as rd
 
 def main():
     # points to be followed
-    pts = [(-6,-7), (-6,0), (-4, 6), (0, 5), (0,-2), (3, -5), (3, 6), (6, 4)]
+    pts = [(-6,-7), (-6,0), (-4, 6), (0, 5), (0,-2), (-2, -6), (3, -5), (3, 6), (6, 4)]
 
     # generate PATH so the vectors are pointing at each other
     PATH = []
@@ -21,10 +21,10 @@ def main():
     PATH.append((pts[-1][0], pts[-1][1], 0))
 
     # or you can also manually set the angles:
-    # PATH = [(-2,4,180), (2,4,0), (2,-3,90), (-5,-6,240), \
+    # PATH = [(-5,5,90),(-5,5,-90),(1,4,180), (5,4,0), (6,-3,90), (4,-4,-40),(-2,0,240), \
     #         (-6, -7, 160), (-7,-1,80)]
 
-    # or just generate a crazy random route:
+    # or just generate a random route:
     # PATH = []
     # for _ in range(10):
     #     PATH.append((rd.randint(-7,7), rd.randint(-7,7), rd.randint(0,359)))
@@ -32,6 +32,9 @@ def main():
     # init turtle
     tesla = turtle.Turtle()
     tesla.speed(0) # 0: fast; 1: slow, 8.4: cool
+    tesla.shape('arrow')
+    tesla.resizemode('user')
+    tesla.shapesize(1, 1)
 
     # draw vectors representing points in PATH
     for pt in PATH:
@@ -39,6 +42,7 @@ def main():
         draw.vec(tesla)
 
     # draw all routes found
+    tesla.speed(0)
     for i in range(len(PATH) - 1):
         paths = rs.get_all_paths(PATH[i], PATH[i+1])
 
@@ -50,6 +54,7 @@ def main():
     # draw shortest route
     tesla.pencolor(1, 0, 0)
     tesla.pensize(3)
+    tesla.speed(10)
     draw.goto(tesla, PATH[0])
     path_length = 0
     for i in range(len(PATH) - 1):

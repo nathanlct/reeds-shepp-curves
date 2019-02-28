@@ -77,7 +77,7 @@ def get_optimal_path(start, end):
         L = path_length(paths[i])
         if L <= L_min:
             L_min, i_min = L, i
-    return paths[i]
+    return paths[i_min]
 
 def get_all_paths(start, end):
     """
@@ -97,6 +97,10 @@ def get_all_paths(start, end):
         paths.append(timeflip(get_path(-x, y, -theta)))
         paths.append(reflect(get_path(x, -y, -theta)))
         paths.append(reflect(timeflip(get_path(-x, -y, theta))))
+
+    # remove path elements that have parameter 0
+    for i in range(len(paths)):
+        paths[i] = list(filter(lambda e: e.param != 0, paths[i]))
 
     # remove empty paths
     paths = list(filter(None, paths))

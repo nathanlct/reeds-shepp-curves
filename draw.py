@@ -4,6 +4,7 @@ import reeds_shepp as rs
 import random as rd
 
 
+# drawing n units (eg turtle.forward(n)) will draw n * SCALE pixels
 SCALE = 40
 
 def scale(x):
@@ -13,6 +14,14 @@ def scale(x):
     if type(x) is tuple or type(x) is list:
         return [p * SCALE for p in x]
     return x * SCALE
+
+def unscale(x):
+    """
+    Unscale the input coordinate(s).
+    """
+    if type(x) is tuple or type(x) is list:
+        return [p / SCALE for p in x]
+    return x / SCALE
 
 # note: bob is a turtle
 
@@ -33,12 +42,15 @@ def vec(bob):
     bob.pensize(1)
     bob.up()
 
-def goto(bob, pos):
+def goto(bob, pos, scale_pos=True):
     """
     Go to a position without drawing.
     """
     bob.up()
-    bob.setpos(scale(pos[:2]))
+    if scale_pos:
+        bob.setpos(scale(pos[:2]))
+    else:
+        bob.setpos(pos[:2])
     bob.setheading(pos[2])
     bob.down()
 
