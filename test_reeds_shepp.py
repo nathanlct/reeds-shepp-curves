@@ -24,6 +24,13 @@ class TestPathElement(unittest.TestCase):
             Steering.RIGHT
         )
 
+    def test_with_negative_parameter(self):
+        element = PathElement(-1, Steering.LEFT, Gear.FORWARD)
+        self.assertEqual(
+            element,
+            PathElement(1, Steering.LEFT, Gear.BACKWARD)
+        )
+
 
 class TestPathLength(unittest.TestCase):
     def test_with_positive_path_elements(self):

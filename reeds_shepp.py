@@ -32,8 +32,16 @@ class Gear(Enum):
     BACKWARD = -1
 
 
-@dataclass
-class PathElement:
+def PathElement(param: float, steering: Steering, gear: Gear):
+    element = _PathElement(param, steering, gear)
+    if param >= 0:
+        return element
+    else:
+        return replace(element, param=-param).reverse_gear()
+
+
+@dataclass(eq=True)
+class _PathElement:
     param: float
     steering: Steering
     gear: Gear
