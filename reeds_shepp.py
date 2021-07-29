@@ -21,50 +21,40 @@ from enum import Enum
 
 
 class Steering(Enum):
-    LEFT = 1
-    RIGHT = 2
-    STRAIGHT = 3
+    LEFT = -1
+    RIGHT = 1
+    STRAIGHT = 0
+
 
 class Gear(Enum):
     FORWARD = 1
-    BACKWARD = 2
+    BACKWARD = -1
 
-class PathElement():
+
+class PathElement:
     def __init__(self, param, steering, gear):
         self.param = param
         self.steering = steering
         self.gear = gear
 
     def __repr__(self):
-        if self.steering == Steering.LEFT: steering_str = "left"
-        elif self.steering == Steering.RIGHT: steering_str = "right"
-        else: steering_str = "straight"
-
-        if self.gear == Gear.FORWARD: gear_str = "forward"
-        else: gear_str = "backward"
-
-        s = "{ Steering: " + steering_str + "\tGear: " + gear_str \
+        s = "{ Steering: " + self.steering.name + "\tGear: " + self.gear.name \
             + "\tdistance: " + str(round(self.param, 2)) + " }"
-
         return s
 
     def reverse_steering(self):
-        if self.steering == Steering.LEFT:
-            self.steering = Steering.RIGHT
-        elif self.steering == Steering.RIGHT:
-            self.steering = Steering.LEFT
+        self.steering = Steering(-self.steering.value)
 
     def reverse_gear(self):
-        if self.gear == Gear.FORWARD:
-            self.gear = Gear.BACKWARD
-        else:
-            self.gear = Gear.FORWARD
+        self.gear = Gear(-self.gear.value)
+
 
 def path_length(path):
     """
     this one's obvious
     """
     return sum([e.param for e in path])
+
 
 def get_optimal_path(start, end):
     """
