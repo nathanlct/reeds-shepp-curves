@@ -279,7 +279,7 @@ def path7(x, y, phi):
     rho, theta = R(xi, eta)
     u1 = (20 - rho*rho) / 16
 
-    if rho <= 6 and 0 <= u1 and u1 <= 1:
+    if rho <= 6 and 0 <= u1 <= 1:
         u = math.acos(u1)
         A = math.asin(2 * math.sin(u) / rho)
         t = M(theta + math.pi/2 + A)
