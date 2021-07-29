@@ -72,13 +72,7 @@ def get_optimal_path(start, end):
     Return the shortest path from start to end among those that exist
     """
     paths = get_all_paths(start, end)
-    i_min = 0
-    L_min = path_length(paths[0])
-    for i in range(1, len(paths)-1):
-        L = path_length(paths[i])
-        if L <= L_min:
-            L_min, i_min = L, i
-    return paths[i_min]
+    return min(paths, key=path_length)
 
 
 def get_all_paths(start, end):
