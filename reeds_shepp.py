@@ -18,6 +18,7 @@ corresponding path (if it exists) as a list of PathElements (or an empty list).
 from utils import *
 import math
 from enum import Enum
+from dataclasses import dataclass, replace
 
 
 class Steering(Enum):
@@ -31,11 +32,11 @@ class Gear(Enum):
     BACKWARD = -1
 
 
+@dataclass
 class PathElement:
-    def __init__(self, param, steering, gear):
-        self.param = param
-        self.steering = steering
-        self.gear = gear
+    param: float
+    steering: Steering
+    gear: Gear
 
     def __repr__(self):
         s = "{ Steering: " + self.steering.name + "\tGear: " + self.gear.name \
@@ -102,16 +103,17 @@ def timeflip(path):
     """
     timeflip transform described around the end of the article
     """
-    new_path = path.copy()
+    new_path = [replace(e) for e in path]
     for e in new_path:
         e.reverse_gear()
     return new_path
+
 
 def reflect(path):
     """
     reflect transform described around the end of the article
     """
-    new_path = path.copy()
+    new_path = [replace(e) for e in path]
     for e in new_path:
         e.reverse_steering()
     return new_path

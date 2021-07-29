@@ -1,5 +1,5 @@
 import unittest
-from reeds_shepp import PathElement, Steering, Gear, path_length
+from reeds_shepp import PathElement, Steering, Gear, path_length, timeflip, reflect
 
 
 class TestPathElement(unittest.TestCase):
@@ -34,6 +34,55 @@ class TestPathLength(unittest.TestCase):
             path_length(path),
             2
         )
+
+
+class TestTimeflip(unittest.TestCase):
+    def setUp(self) -> None:
+        self.path = [PathElement(1, Steering.LEFT, g) for g in (Gear.FORWARD, Gear.BACKWARD)]
+        self.timeflipped = timeflip(self.path)
+
+    def test_it_flips_forward_backward(self):
+        self.assertEqual(
+            self.timeflipped[0].gear,
+            Gear.BACKWARD
+        )
+        self.assertEqual(
+            self.timeflipped[1].gear,
+            Gear.FORWARD
+        )
+
+    def test_it_does_not_mutate_original_path(self):
+        self.assertEqual(
+            self.path[0].gear,
+            Gear.FORWARD,
+        )
+
+
+class TestReflect(unittest.TestCase):
+    def setUp(self) -> None:
+        self.path = [PathElement(1, s, Gear.FORWARD) for s in (Steering.LEFT, Steering.STRAIGHT, Steering.RIGHT)]
+        self.reflected = reflect(self.path)
+
+    def test_it_reflects_steering(self):
+        self.assertEqual(
+            self.reflected[0].steering,
+            Steering.RIGHT
+        )
+        self.assertEqual(
+            self.reflected[1].steering,
+            Steering.STRAIGHT
+        )
+        self.assertEqual(
+            self.reflected[2].steering,
+            Steering.LEFT
+        )
+
+    def test_it_does_not_mutate_original_path(self):
+        self.assertEqual(
+            self.path[0].steering,
+            Steering.LEFT,
+        )
+
 
 
 if __name__ == '__main__':
