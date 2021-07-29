@@ -13,16 +13,14 @@ class TestPathElement(unittest.TestCase):
         )
 
     def test_reverse_gear(self):
-        self.element.reverse_gear()
         self.assertEqual(
-            self.element.gear,
+            self.element.reverse_gear().gear,
             Gear.BACKWARD
         )
 
     def test_reverse_steering(self):
-        self.element.reverse_steering()
         self.assertEqual(
-            self.element.steering,
+            self.element.reverse_steering().steering,
             Steering.RIGHT
         )
 

@@ -44,10 +44,12 @@ class PathElement:
         return s
 
     def reverse_steering(self):
-        self.steering = Steering(-self.steering.value)
+        steering = Steering(-self.steering.value)
+        return replace(self, steering=steering)
 
     def reverse_gear(self):
-        self.gear = Gear(-self.gear.value)
+        gear = Gear(-self.gear.value)
+        return replace(self, gear=gear)
 
 
 def path_length(path):
@@ -69,6 +71,7 @@ def get_optimal_path(start, end):
         if L <= L_min:
             L_min, i_min = L, i
     return paths[i_min]
+
 
 def get_all_paths(start, end):
     """
@@ -103,9 +106,7 @@ def timeflip(path):
     """
     timeflip transform described around the end of the article
     """
-    new_path = [replace(e) for e in path]
-    for e in new_path:
-        e.reverse_gear()
+    new_path = [e.reverse_gear() for e in path]
     return new_path
 
 
@@ -113,12 +114,8 @@ def reflect(path):
     """
     reflect transform described around the end of the article
     """
-    new_path = [replace(e) for e in path]
-    for e in new_path:
-        e.reverse_steering()
+    new_path = [e.reverse_steering() for e in path]
     return new_path
-
-
 
 
 def path1(x, y, phi):
