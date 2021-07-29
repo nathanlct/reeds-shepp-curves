@@ -1,5 +1,5 @@
 import unittest
-from reeds_shepp import PathElement, Steering, Gear, path_length, timeflip, reflect
+from reeds_shepp import PathElement, Steering, Gear, path_length, timeflip, reflect, get_optimal_path
 
 
 class TestPathElement(unittest.TestCase):
@@ -86,6 +86,15 @@ class TestReflect(unittest.TestCase):
         self.assertEqual(
             self.path[0].steering,
             Steering.LEFT,
+        )
+
+
+class TestGetOptimalPath(unittest.TestCase):
+    def test_smoke_test(self):
+        path = get_optimal_path((0, 0, 0), (1, 0, 0))
+        self.assertEqual(
+            path,
+            [PathElement.create(1.0, Steering.STRAIGHT, Gear.FORWARD)]
         )
 
 
