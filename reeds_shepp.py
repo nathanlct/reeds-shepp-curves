@@ -32,19 +32,18 @@ class Gear(Enum):
     BACKWARD = -1
 
 
-def PathElement(param: float, steering: Steering, gear: Gear):
-    element = _PathElement(param, steering, gear)
-    if param >= 0:
-        return element
-    else:
-        return replace(element, param=-param).reverse_gear()
-
-
 @dataclass(eq=True)
-class _PathElement:
+class PathElement:
     param: float
     steering: Steering
     gear: Gear
+
+    @classmethod
+    def create(cls, param: float, steering: Steering, gear: Gear):
+        if param >= 0:
+            return cls(param, steering, gear)
+        else:
+            return cls(-param, steering, gear).reverse_gear()
 
     def __repr__(self):
         s = "{ Steering: " + self.steering.name + "\tGear: " + self.gear.name \
@@ -132,9 +131,9 @@ def path1(x, y, phi):
     v = M(phi - t)
 
     if t >= 0 and u >= 0 and v >= 0:
-        path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-        path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-        path.append(PathElement(v, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
 
@@ -155,9 +154,9 @@ def path2(x, y, phi):
         v = M(t - phi)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
 
@@ -181,9 +180,9 @@ def path3(x, y, phi):
         v = M(phi - t - u)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
 
@@ -207,9 +206,9 @@ def path4(x, y, phi):
         v = M(t + u - phi)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -233,9 +232,9 @@ def path5(x, y, phi):
         v = M(t - u - phi)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -265,10 +264,10 @@ def path6(x, y, phi):
             v = M(phi - t + 2*u)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -293,10 +292,10 @@ def path7(x, y, phi):
         v = M(t - phi)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
 
@@ -320,10 +319,10 @@ def path8(x, y, phi):
         v = M(t - phi + math.pi/2)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -347,10 +346,10 @@ def path9(x, y, phi):
         v = M(t - phi - math.pi/2)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+            path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -373,10 +372,10 @@ def path10(x, y, phi):
         v = M(phi - t - math.pi/2)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -399,10 +398,10 @@ def path11(x, y, phi):
         v = M(phi - t - math.pi/2)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+            path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -426,10 +425,10 @@ def path12(x, y, phi):
         v = M(t - phi)
 
         if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(math.pi/2, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+            path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+            path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+            path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.BACKWARD))
+            path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path

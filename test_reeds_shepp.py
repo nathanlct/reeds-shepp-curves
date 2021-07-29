@@ -4,7 +4,7 @@ from reeds_shepp import PathElement, Steering, Gear, path_length, timeflip, refl
 
 class TestPathElement(unittest.TestCase):
     def setUp(self) -> None:
-        self.element = PathElement(13, Steering.LEFT, Gear.FORWARD)
+        self.element = PathElement.create(13, Steering.LEFT, Gear.FORWARD)
 
     def test_repr(self):
         self.assertEqual(
@@ -25,16 +25,16 @@ class TestPathElement(unittest.TestCase):
         )
 
     def test_with_negative_parameter(self):
-        element = PathElement(-1, Steering.LEFT, Gear.FORWARD)
+        element = PathElement.create(-1, Steering.LEFT, Gear.FORWARD)
         self.assertEqual(
             element,
-            PathElement(1, Steering.LEFT, Gear.BACKWARD)
+            PathElement.create(1, Steering.LEFT, Gear.BACKWARD)
         )
 
 
 class TestPathLength(unittest.TestCase):
     def test_with_positive_path_elements(self):
-        path = [PathElement(1, Steering.LEFT, Gear.FORWARD) for _ in range(2)]
+        path = [PathElement.create(1, Steering.LEFT, Gear.FORWARD) for _ in range(2)]
         self.assertEqual(
             path_length(path),
             2
@@ -43,7 +43,7 @@ class TestPathLength(unittest.TestCase):
 
 class TestTimeflip(unittest.TestCase):
     def setUp(self) -> None:
-        self.path = [PathElement(1, Steering.LEFT, g) for g in (Gear.FORWARD, Gear.BACKWARD)]
+        self.path = [PathElement.create(1, Steering.LEFT, g) for g in (Gear.FORWARD, Gear.BACKWARD)]
         self.timeflipped = timeflip(self.path)
 
     def test_it_flips_forward_backward(self):
@@ -65,7 +65,7 @@ class TestTimeflip(unittest.TestCase):
 
 class TestReflect(unittest.TestCase):
     def setUp(self) -> None:
-        self.path = [PathElement(1, s, Gear.FORWARD) for s in (Steering.LEFT, Steering.STRAIGHT, Steering.RIGHT)]
+        self.path = [PathElement.create(1, s, Gear.FORWARD) for s in (Steering.LEFT, Steering.STRAIGHT, Steering.RIGHT)]
         self.reflected = reflect(self.path)
 
     def test_it_reflects_steering(self):
