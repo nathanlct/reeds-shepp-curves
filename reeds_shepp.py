@@ -129,8 +129,8 @@ def path1(x, y, phi):
     u, t = R(x - math.sin(phi), y - 1 + math.cos(phi))
     v = M(phi - t)
 
-    path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
     path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+    path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
     path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
@@ -150,8 +150,8 @@ def path2(x, y, phi):
         t = M(t1 + math.atan2(2, u))
         v = M(t - phi)
 
-        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
@@ -174,8 +174,8 @@ def path3(x, y, phi):
         u = M(math.pi - 2*A)
         v = M(phi - t - u)
 
-        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
@@ -198,8 +198,8 @@ def path4(x, y, phi):
         u = M(math.pi - 2*A)
         v = M(t + u - phi)
 
-        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
@@ -222,8 +222,8 @@ def path5(x, y, phi):
         t = M(theta + math.pi/2 - A)
         v = M(t - u - phi)
 
-        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
         path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
@@ -252,8 +252,8 @@ def path6(x, y, phi):
             u = M(math.pi - A)
             v = M(phi - t + 2*u)
 
-        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
         path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
@@ -278,8 +278,8 @@ def path7(x, y, phi):
         t = M(theta + math.pi/2 + A)
         v = M(t - phi)
 
-        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
@@ -303,8 +303,8 @@ def path8(x, y, phi):
         t = M(theta + math.pi/2 + A)
         v = M(t - phi + math.pi/2)
 
-        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
@@ -328,8 +328,8 @@ def path9(x, y, phi):
         t = M(theta + math.pi/2 - A)
         v = M(t - phi - math.pi/2)
 
-        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.FORWARD))
         path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
@@ -352,8 +352,8 @@ def path10(x, y, phi):
         u = rho - 2
         v = M(phi - t - math.pi/2)
 
-        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
@@ -376,8 +376,8 @@ def path11(x, y, phi):
         u = rho - 2
         v = M(phi - t - math.pi/2)
 
-        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
         path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.FORWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
@@ -401,8 +401,8 @@ def path12(x, y, phi):
         t = M(theta + math.pi/2 + A)
         v = M(t - phi)
 
-        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
         path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
         path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.BACKWARD))
         path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
