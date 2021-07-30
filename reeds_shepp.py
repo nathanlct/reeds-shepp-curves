@@ -123,7 +123,6 @@ def path1(x, y, phi):
     """
     Formula 8.1: CSC (same turns)
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -141,7 +140,6 @@ def path2(x, y, phi):
     """
     Formula 8.2: CSC (opposite turns)
     """
-    r, theta = R(x, y)
     phi = M(deg2rad(phi))
     path = []
 
@@ -163,7 +161,6 @@ def path3(x, y, phi):
     """
     Formula 8.3: C|C|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -188,7 +185,6 @@ def path4(x, y, phi):
     """
     Formula 8.4 (1): C|CC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -213,7 +209,6 @@ def path5(x, y, phi):
     """
     Formula 8.4 (2): CC|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -238,7 +233,6 @@ def path6(x, y, phi):
     """
     Formula 8.7: CCu|CuC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -270,7 +264,6 @@ def path7(x, y, phi):
     """
     Formula 8.8: C|CuCu|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -297,7 +290,6 @@ def path8(x, y, phi):
     """
     Formula 8.9 (1): C|C[pi/2]SC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -323,7 +315,6 @@ def path9(x, y, phi):
     """
     Formula 8.9 (2): CSC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -349,7 +340,6 @@ def path10(x, y, phi):
     """
     Formula 8.10 (1): C|C[pi/2]SC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -374,7 +364,6 @@ def path11(x, y, phi):
     """
     Formula 8.10 (2): CSC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -399,7 +388,6 @@ def path12(x, y, phi):
     """
     Formula 8.11: C|C[pi/2]SC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
