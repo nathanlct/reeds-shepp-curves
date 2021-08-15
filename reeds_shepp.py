@@ -18,47 +18,46 @@ corresponding path (if it exists) as a list of PathElements (or an empty list).
 from utils import *
 import math
 from enum import Enum
+from dataclasses import dataclass, replace
 
 
 class Steering(Enum):
-    LEFT = 1
-    RIGHT = 2
-    STRAIGHT = 3
+    LEFT = -1
+    RIGHT = 1
+    STRAIGHT = 0
+
 
 class Gear(Enum):
     FORWARD = 1
-    BACKWARD = 2
+    BACKWARD = -1
 
-class PathElement():
-    def __init__(self, param, steering, gear):
-        self.param = param
-        self.steering = steering
-        self.gear = gear
+
+@dataclass(eq=True)
+class PathElement:
+    param: float
+    steering: Steering
+    gear: Gear
+
+    @classmethod
+    def create(cls, param: float, steering: Steering, gear: Gear):
+        if param >= 0:
+            return cls(param, steering, gear)
+        else:
+            return cls(-param, steering, gear).reverse_gear()
 
     def __repr__(self):
-        if self.steering == Steering.LEFT: steering_str = "left"
-        elif self.steering == Steering.RIGHT: steering_str = "right"
-        else: steering_str = "straight"
-
-        if self.gear == Gear.FORWARD: gear_str = "forward"
-        else: gear_str = "backward"
-
-        s = "{ Steering: " + steering_str + "\tGear: " + gear_str \
+        s = "{ Steering: " + self.steering.name + "\tGear: " + self.gear.name \
             + "\tdistance: " + str(round(self.param, 2)) + " }"
-
         return s
 
     def reverse_steering(self):
-        if self.steering == Steering.LEFT:
-            self.steering = Steering.RIGHT
-        elif self.steering == Steering.RIGHT:
-            self.steering = Steering.LEFT
+        steering = Steering(-self.steering.value)
+        return replace(self, steering=steering)
 
     def reverse_gear(self):
-        if self.gear == Gear.FORWARD:
-            self.gear = Gear.BACKWARD
-        else:
-            self.gear = Gear.FORWARD
+        gear = Gear(-self.gear.value)
+        return replace(self, gear=gear)
+
 
 def path_length(path):
     """
@@ -66,18 +65,14 @@ def path_length(path):
     """
     return sum([e.param for e in path])
 
+
 def get_optimal_path(start, end):
     """
     Return the shortest path from start to end among those that exist
     """
     paths = get_all_paths(start, end)
-    i_min = 0
-    L_min = path_length(paths[0])
-    for i in range(1, len(paths)-1):
-        L = path_length(paths[i])
-        if L <= L_min:
-            L_min, i_min = L, i
-    return paths[i_min]
+    return min(paths, key=path_length)
+
 
 def get_all_paths(start, end):
     """
@@ -112,38 +107,31 @@ def timeflip(path):
     """
     timeflip transform described around the end of the article
     """
-    new_path = path.copy()
-    for e in new_path:
-        e.reverse_gear()
+    new_path = [e.reverse_gear() for e in path]
     return new_path
+
 
 def reflect(path):
     """
     reflect transform described around the end of the article
     """
-    new_path = path.copy()
-    for e in new_path:
-        e.reverse_steering()
+    new_path = [e.reverse_steering() for e in path]
     return new_path
-
-
 
 
 def path1(x, y, phi):
     """
     Formula 8.1: CSC (same turns)
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
     u, t = R(x - math.sin(phi), y - 1 + math.cos(phi))
     v = M(phi - t)
 
-    if t >= 0 and u >= 0 and v >= 0:
-        path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-        path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-        path.append(PathElement(v, Steering.LEFT, Gear.FORWARD))
+    path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+    path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+    path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
 
@@ -152,7 +140,6 @@ def path2(x, y, phi):
     """
     Formula 8.2: CSC (opposite turns)
     """
-    r, theta = R(x, y)
     phi = M(deg2rad(phi))
     path = []
 
@@ -163,10 +150,9 @@ def path2(x, y, phi):
         t = M(t1 + math.atan2(2, u))
         v = M(t - phi)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
 
@@ -175,7 +161,6 @@ def path3(x, y, phi):
     """
     Formula 8.3: C|C|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -189,10 +174,9 @@ def path3(x, y, phi):
         u = M(math.pi - 2*A)
         v = M(phi - t - u)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.FORWARD))
 
     return path
 
@@ -201,7 +185,6 @@ def path4(x, y, phi):
     """
     Formula 8.4 (1): C|CC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -215,10 +198,9 @@ def path4(x, y, phi):
         u = M(math.pi - 2*A)
         v = M(t + u - phi)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -227,7 +209,6 @@ def path5(x, y, phi):
     """
     Formula 8.4 (2): CC|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -241,10 +222,9 @@ def path5(x, y, phi):
         t = M(theta + math.pi/2 - A)
         v = M(t - u - phi)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -253,7 +233,6 @@ def path6(x, y, phi):
     """
     Formula 8.7: CCu|CuC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -273,11 +252,10 @@ def path6(x, y, phi):
             u = M(math.pi - A)
             v = M(phi - t + 2*u)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -286,7 +264,6 @@ def path7(x, y, phi):
     """
     Formula 8.8: C|CuCu|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -295,17 +272,16 @@ def path7(x, y, phi):
     rho, theta = R(xi, eta)
     u1 = (20 - rho*rho) / 16
 
-    if rho <= 6 and 0 <= u1 and u1 <= 1:
+    if rho <= 6 and 0 <= u1 <= 1:
         u = math.acos(u1)
         A = math.asin(2 * math.sin(u) / rho)
         t = M(theta + math.pi/2 + A)
         v = M(t - phi)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(u, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
 
@@ -314,7 +290,6 @@ def path8(x, y, phi):
     """
     Formula 8.9 (1): C|C[pi/2]SC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -328,11 +303,10 @@ def path8(x, y, phi):
         t = M(theta + math.pi/2 + A)
         v = M(t - phi + math.pi/2)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -341,7 +315,6 @@ def path9(x, y, phi):
     """
     Formula 8.9 (2): CSC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -355,11 +328,10 @@ def path9(x, y, phi):
         t = M(theta + math.pi/2 - A)
         v = M(t - phi - math.pi/2)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(v, Steering.LEFT, Gear.BACKWARD))
 
     return path
 
@@ -368,7 +340,6 @@ def path10(x, y, phi):
     """
     Formula 8.10 (1): C|C[pi/2]SC
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -381,11 +352,10 @@ def path10(x, y, phi):
         u = rho - 2
         v = M(phi - t - math.pi/2)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -394,7 +364,6 @@ def path11(x, y, phi):
     """
     Formula 8.10 (2): CSC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -407,11 +376,10 @@ def path11(x, y, phi):
         u = rho - 2
         v = M(phi - t - math.pi/2)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.BACKWARD))
 
     return path
 
@@ -420,7 +388,6 @@ def path12(x, y, phi):
     """
     Formula 8.11: C|C[pi/2]SC[pi/2]|C
     """
-    r, theta = R(x, y)
     phi = deg2rad(phi)
     path = []
 
@@ -434,11 +401,10 @@ def path12(x, y, phi):
         t = M(theta + math.pi/2 + A)
         v = M(t - phi)
 
-        if t >= 0 and u >= 0 and v >= 0:
-            path.append(PathElement(t, Steering.LEFT, Gear.FORWARD))
-            path.append(PathElement(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
-            path.append(PathElement(u, Steering.STRAIGHT, Gear.BACKWARD))
-            path.append(PathElement(math.pi/2, Steering.LEFT, Gear.BACKWARD))
-            path.append(PathElement(v, Steering.RIGHT, Gear.FORWARD))
+        path.append(PathElement.create(t, Steering.LEFT, Gear.FORWARD))
+        path.append(PathElement.create(math.pi/2, Steering.RIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(u, Steering.STRAIGHT, Gear.BACKWARD))
+        path.append(PathElement.create(math.pi/2, Steering.LEFT, Gear.BACKWARD))
+        path.append(PathElement.create(v, Steering.RIGHT, Gear.FORWARD))
 
     return path
